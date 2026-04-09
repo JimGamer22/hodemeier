@@ -1,5 +1,4 @@
 streamlit
-playwright
 pandas
+altair
 st-gsheets-connection
-pytest-playwright

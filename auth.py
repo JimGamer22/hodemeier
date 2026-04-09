@@ -7,13 +7,26 @@ def check_password():
     if st.session_state["authenticated"]:
         return True
 
-    st.title("🔒 Login")
-    password = st.text_input("Passwort eingeben:", type="password")
-    
-    if st.button("Anmelden"):
-        if password == st.secrets["APP_PASSWORD"]:
-            st.session_state["authenticated"] = True
-            st.rerun()
-        else:
-            st.error("Falsches Passwort!")
+    # Centered login card
+    col1, col2, col3 = st.columns([1, 1.2, 1])
+    with col2:
+        st.markdown("<br><br>", unsafe_allow_html=True)
+        st.markdown("""
+        <div style='text-align:center; margin-bottom: 2rem;'>
+            <span style='font-size: 48px;'>🔴</span>
+            <h2 style='margin: 8px 0 4px; font-weight: 600;'>Hodemeier Hub</h2>
+            <p style='color: #888; font-size: 14px;'>Bitte anmelden</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        password = st.text_input("Passwort", type="password", placeholder="••••••••", label_visibility="collapsed")
+
+        if st.button("Anmelden →", use_container_width=True, type="primary"):
+            correct = st.secrets.get("APP_PASSWORD", "hode")  # Fallback nur lokal
+            if password == correct:
+                st.session_state["authenticated"] = True
+                st.rerun()
+            else:
+                st.error("Falsches Passwort.")
+
     return False
