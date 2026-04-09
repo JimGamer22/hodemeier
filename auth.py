@@ -11,7 +11,7 @@ def check_password():
     password = st.text_input("Passwort eingeben:", type="password")
     
     if st.button("Anmelden"):
-        if password == "2244":
+        if password == "hode":
             st.session_state["authenticated"] = True
             st.rerun()
         else:
