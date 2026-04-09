@@ -20,7 +20,7 @@ def render_predictor_tab():
     st.header("🔴 ApoRed Reload Predictor")
 
     # Verbindung zu Google Sheets herstellen
-    # Hinweis: Die Secrets müssen in Replit unter 'Secrets' hinterlegt sein!
+    # Hinweis: Die Secrets müssen in Streamlit unter 'Secrets' hinterlegt sein!
     conn = st.connection("gsheets", type=GSheetsConnection)
 
     def load_data():
