@@ -1,2 +1,0 @@
-import os
-if password == os.environ.get("APP_PASSWORD", ""):
