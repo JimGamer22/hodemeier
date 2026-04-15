@@ -2,7 +2,7 @@ import streamlit as st
 from auth import check_password
 from email_manager.automation import render_automation_tab
 from apored_predictor.predictor import render_predictor_tab
-from files.email_generator import render_email_generator_tab
+from email_generator.email_generator import render_email_generator_tab
 
 st.set_page_config(
     page_title="Hodemeier Hub",
