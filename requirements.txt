@@ -2,3 +2,6 @@ streamlit
 pandas
 altair
 st-gsheets-connection
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client

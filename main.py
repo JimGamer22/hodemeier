@@ -1,7 +1,8 @@
 import streamlit as st
 from auth import check_password
-from google_manager.automation import render_automation_tab
-from apored.predictor import render_predictor_tab
+from email_manager.automation import render_automation_tab
+from apored_predictor.predictor import render_predictor_tab
+from files.email_generator import render_email_generator_tab
 
 st.set_page_config(
     page_title="Hodemeier Hub",
@@ -52,7 +53,8 @@ def main():
         st.markdown("---")
         pages = {
             "📊  ApoRed Predictor": "predictor",
-            "📧  Google Manager": "google",
+            "📧  Email Generator": "email",      # ← NEU
+            "🔐  Account Manager": "google",
         }
         choice_label = st.radio("Nav", list(pages.keys()), label_visibility="collapsed")
         choice = pages[choice_label]
@@ -61,9 +63,11 @@ def main():
         if st.button("⏻  Logout", use_container_width=True):
             st.session_state["authenticated"] = False
             st.rerun()
-
+            
     if choice == "predictor":
         render_predictor_tab()
+    elif choice == "email":                    # ← NEU
+        render_email_generator_tab()
     elif choice == "google":
         render_automation_tab()
 
