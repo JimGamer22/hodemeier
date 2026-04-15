@@ -5,22 +5,22 @@ from datetime import datetime
 import secrets
 import string
 import mailslurp_client
+import mailslurp_client
 
-# Konfiguration (Key in st.secrets speichern!)
-configuration = mailslurp_client.Configuration()
-configuration.api_key['sk_tavEGouWaFotdCkE_bjAv0kTi84XmirM8NOhDVyDQy0AjnrZyp4JexYREqgiZNemUydiu4OIGYe1ejP4p'] = "DEIN_MAILSLURP_API_KEY"
-
-def create_real_email():
+def generate_real_email():
+    configuration = mailslurp_client.Configuration()
+    configuration.api_key['sk_tavEGouWaFotdCkE_bjAv0kTi84XmirM8NOhDVyDQy0AjnrZyp4JexYREqgiZNemUydiu4OIGYe1ejP4p'] = st.secrets["mailslurp"]["api_key"]
+    
     with mailslurp_client.ApiClient(configuration) as api_client:
         inbox_controller = mailslurp_client.InboxControllerApi(api_client)
-        
-        # Erstellt ein echtes Postfach
         inbox = inbox_controller.create_inbox_with_defaults()
-        
-        return {
-            "email": inbox.email_address,
-            "id": inbox.id
-        }
+        return inbox.email_address, inbox.id
+
+# In der UI (email_generator/main.py)
+if st.button("Echtes Postfach erstellen"):
+    email, inbox_id = generate_real_email()
+    st.success(f"Erstellt: {email}")
+    # Hier dann den Eintrag ins Google Sheet vornehmen (siehe Schritt 3)
 
 # Beispiel-Nutzung:
 # new_acc = create_real_email()

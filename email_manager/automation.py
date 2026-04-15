@@ -1,5 +1,19 @@
 import streamlit as st
+import mailslurp_client
 
+# email_manager/automation.py (Vorschlag)
+def get_verification_code(inbox_id, search_term):
+    configuration = mailslurp_client.Configuration()
+    configuration.api_key['sk_tavEGouWaFotdCkE_bjAv0kTi84XmirM8NOhDVyDQy0AjnrZyp4JexYREqgiZNemUydiu4OIGYe1ejP4p'] = st.secrets["mailslurp"]["api_key"]
+
+    with mailslurp_client.ApiClient(configuration) as api_client:
+        wait_controller = mailslurp_client.WaitForControllerApi(api_client)
+        # Wartet auf die nächste Email
+        email = wait_controller.wait_for_latest_email(inbox_id=inbox_id, timeout=30000, unread_only=True)
+        return email.body
+    
+    
+    
 def render_automation_tab():
     st.markdown("## 📧 Google Account Manager")
     st.info(

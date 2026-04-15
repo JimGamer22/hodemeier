@@ -26,6 +26,7 @@ def render_predictor_tab():
     conn = st.connection("gsheets", type=GSheetsConnection)
 
 
+    @st.cache_data(ttl=600)
     def load_data():
         try:
             conn = st.connection("gsheets", type=GSheetsConnection)
