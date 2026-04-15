@@ -22,7 +22,7 @@ def check_password():
         password = st.text_input("Passwort", type="password", label_visibility="collapsed")
 
         if st.button("Anmelden →", use_container_width=True, type="primary"):
-            correct = st.secrets.get("APP_PASSWORD")  # Fallback nur lokal
+            correct = st.secrets["app"]["APP_PASSWORD"]  
             if password == correct:
                 st.session_state["authenticated"] = True
                 st.rerun()
