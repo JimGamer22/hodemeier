@@ -4,6 +4,27 @@ import pandas as pd
 from datetime import datetime
 import secrets
 import string
+import mailslurp_client
+
+# Konfiguration (Key in st.secrets speichern!)
+configuration = mailslurp_client.Configuration()
+configuration.api_key['sk_tavEGouWaFotdCkE_bjAv0kTi84XmirM8NOhDVyDQy0AjnrZyp4JexYREqgiZNemUydiu4OIGYe1ejP4p'] = "DEIN_MAILSLURP_API_KEY"
+
+def create_real_email():
+    with mailslurp_client.ApiClient(configuration) as api_client:
+        inbox_controller = mailslurp_client.InboxControllerApi(api_client)
+        
+        # Erstellt ein echtes Postfach
+        inbox = inbox_controller.create_inbox_with_defaults()
+        
+        return {
+            "email": inbox.email_address,
+            "id": inbox.id
+        }
+
+# Beispiel-Nutzung:
+# new_acc = create_real_email()
+# print(f"Echte E-Mail erstellt: {new_acc['email']}")
 
 def generate_secure_password(length=12):
     """Generiert ein sicheres Passwort."""

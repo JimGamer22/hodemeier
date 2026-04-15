@@ -25,14 +25,19 @@ def render_predictor_tab():
 
     conn = st.connection("gsheets", type=GSheetsConnection)
 
+
     def load_data():
         try:
-            data = conn.read(worksheet="stats", ttl=0)
-            if data is None or data.empty:
-                return pd.DataFrame(columns=["runde", "platz", "kills", "map", "win_vorher", "stunde"])
-            return data
-        except Exception:
-            return pd.DataFrame(columns=["runde", "platz", "kills", "map", "win_vorher", "stunde"])
+            conn = st.connection("gsheets", type=GSheetsConnection)
+            # Nutze die ID direkt aus den Secrets
+            df = conn.read(
+                spreadsheet=st.secrets["sheets"]["apored_sheet_id"],
+                worksheet=st.secrets["sheets"]["apored_worksheet"]
+            )
+            return df
+        except Exception as e:
+            st.error(f"Fehler beim Laden: {e}")
+            return pd.DataFrame()
 
     df = load_data()
 
