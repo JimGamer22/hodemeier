@@ -53,7 +53,7 @@ def main():
         st.markdown("---")
         pages = {
             "📊  ApoRed Predictor": "predictor",
-            "📧  Email Generator": "email",      # ← NEU
+            "🆕  Account Creator": "email",      # Label geändert
             "🔐  Account Manager": "google",
         }
         choice_label = st.radio("Nav", list(pages.keys()), label_visibility="collapsed")
