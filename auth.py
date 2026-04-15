@@ -19,10 +19,10 @@ def check_password():
         </div>
         """, unsafe_allow_html=True)
 
-        password = st.text_input("Passwort", type="password", placeholder="••••••••", label_visibility="collapsed")
+        password = st.text_input("Passwort", type="password", label_visibility="collapsed")
 
         if st.button("Anmelden →", use_container_width=True, type="primary"):
-            correct = st.secrets.get("APP_PASSWORD", "hode")  # Fallback nur lokal
+            correct = st.secrets.get("APP_PASSWORD")  # Fallback nur lokal
             if password == correct:
                 st.session_state["authenticated"] = True
                 st.rerun()
