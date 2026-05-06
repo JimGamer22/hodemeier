@@ -1,40 +1,30 @@
 import streamlit as st
-import mailslurp_client
+import pandas as pd
+from .email_generator import create_inbox
+from auth import get_gspread_client
 
-# email_manager/automation.py (Vorschlag)
-def get_verification_code(inbox_id, search_term):
-    configuration = mailslurp_client.Configuration()
-    configuration.api_key['sk_tavEGouWaFotdCkE_bjAv0kTi84XmirM8NOhDVyDQy0AjnrZyp4JexYREqgiZNemUydiu4OIGYe1ejP4p'] = st.secrets["mailslurp"]["api_key"]
-
-    with mailslurp_client.ApiClient(configuration) as api_client:
-        wait_controller = mailslurp_client.WaitForControllerApi(api_client)
-        # Wartet auf die nächste Email
-        email = wait_controller.wait_for_latest_email(inbox_id=inbox_id, timeout=30000, unread_only=True)
-        return email.body
+def show_email_manager():
+    st.title("📧 Email & Account Manager")
     
-    
-    
-def render_automation_tab():
-    st.markdown("## 📧 Google Account Manager")
-    st.info(
-        "**Hinweis:** Playwright-Automation läuft nicht auf Streamlit Cloud.\n\n"
-        "Für Gmail-Zugriff auf bestehende Accounts: **Gmail API** via `google-api-python-client`.\n\n"
-        "Neue Google-Accounts lassen sich nicht automatisch erstellen (Terms of Service).",
-        icon="ℹ️",
-    )
+    client = get_gspread_client()
+    if not client: return
 
-    st.markdown("---")
-    col1, col2 = st.columns(2)
+    # Öffne das Sheet über die ID aus deinen Secrets
+    sheet_id = st.secrets["sheets"]["email_sheet_id"]
+    worksheet_name = st.secrets["sheets"]["email_worksheet"]
+    sheet = client.open_by_key(sheet_id).worksheet(worksheet_name)
 
-    with col1:
-        st.markdown("#### Account hinzufügen")
-        email = st.text_input("Google Email", placeholder="name@gmail.com")
-        if st.button("💾  Speichern", type="primary"):
-            if email:
-                st.success(f"Account **{email}** registriert.")
-            else:
-                st.warning("Bitte eine Email eingeben.")
+    if st.button("➕ Neues MailSlurp Postfach erstellen"):
+        with st.spinner("Erstelle Inbox..."):
+            email_addr, inbox_id = create_inbox()
+            # In das GSheet schreiben
+            sheet.append_row([email_addr, inbox_id, "Aktiv"])
+            st.success(f"Erstellt: {email_addr}")
 
-    with col2:
-        st.markdown("#### Gespeicherte Accounts")
-        st.markdown("_Noch keine Accounts gespeichert._")
+    st.subheader("Deine Accounts")
+    data = sheet.get_all_records()
+    if data:
+        df = pd.DataFrame(data)
+        st.dataframe(df, use_container_width=True)
+    else:
+        st.info("Noch keine Accounts vorhanden.")
