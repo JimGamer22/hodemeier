@@ -1,6 +1,7 @@
 import streamlit as st
 
 def check_password():
+    """Prüft das Passwort und verwaltet die Authentifizierung."""
     if "authenticated" not in st.session_state:
         st.session_state["authenticated"] = False
 
@@ -19,11 +20,18 @@ def check_password():
         </div>
         """, unsafe_allow_html=True)
 
-        password = st.text_input("Passwort", type="password", label_visibility="collapsed")
+        password = st.text_input(
+            "Passwort",
+            type="password",
+            placeholder="••••••••",
+            label_visibility="collapsed"
+        )
 
         if st.button("Anmelden →", use_container_width=True, type="primary"):
-            correct = st.secrets["app"]["APP_PASSWORD"]  
-            if password == correct:
+            # Fallback für lokale Tests ohne Secrets
+            correct_password = st.secrets.get("app", {}).get("APP_PASSWORD", "hode")
+            
+            if password == correct_password:
                 st.session_state["authenticated"] = True
                 st.rerun()
             else:
